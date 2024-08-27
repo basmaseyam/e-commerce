@@ -89,10 +89,10 @@ export default buildConfig({
   graphQL: {
     schemaOutputFile: path.resolve(__dirname, 'generated-schema.graphql'),
   },
-  cors: ['https://checkout.stripe.com', process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(
+  cors: ['https://checkout.stripe.com', process.env.PAYLOAD_PUBLIC_SERVER_URL, 'https://prod.spline.designe/', 'https://my.spline.design/' || ''].filter(
     Boolean,
   ),
-  csrf: ['https://checkout.stripe.com', process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(
+  csrf: ['http://localhost:3000/admin','https://checkout.stripe.com', process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(
     Boolean,
   ),
   endpoints: [
@@ -118,6 +118,7 @@ export default buildConfig({
       method: 'get',
       handler: seed,
     },
+   
   ],
   plugins: [
     stripePlugin({
@@ -137,11 +138,13 @@ export default buildConfig({
     nestedDocs({
       collections: ['categories'],
     }),
+    
     seo({
       collections: ['pages', 'products'],
       generateTitle,
       uploadsCollection: 'media',
     }),
+    
     payloadCloud(),
   ],
 })
