@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import type { Payload } from 'payload'
+import { Payload } from 'payload'
 
 import { cartPage } from './cart-page'
 import { home } from './home'
@@ -114,7 +114,7 @@ export const seed = async (payload: Payload): Promise<void> => {
     data: JSON.parse(
       JSON.stringify({ ...product1, categories: [apparelCategory.id] }).replace(
         /"\{\{PRODUCT_IMAGE\}\}"/g,
-        image1ID,
+        image1ID.toString(),
       ),
     ),
   })
@@ -124,7 +124,7 @@ export const seed = async (payload: Payload): Promise<void> => {
     data: JSON.parse(
       JSON.stringify({ ...product2, categories: [ebooksCategory.id] }).replace(
         /"\{\{PRODUCT_IMAGE\}\}"/g,
-        image2ID,
+        image2ID.toString(),
       ),
     ),
   })
@@ -134,7 +134,7 @@ export const seed = async (payload: Payload): Promise<void> => {
     data: JSON.parse(
       JSON.stringify({ ...product3, categories: [coursesCategory.id] }).replace(
         /"\{\{PRODUCT_IMAGE\}\}"/g,
-        image3ID,
+        image3ID.toString(),
       ),
     ),
   })
@@ -144,25 +144,26 @@ export const seed = async (payload: Payload): Promise<void> => {
   await Promise.all([
     await payload.update({
       collection: 'products',
-      id: product1Doc.id,
+      id: product1Doc.id.toString(),
       data: {
-        relatedProducts: [product2Doc.id, product3Doc.id],
+        relatedProducts: [product2Doc.id.toString(), product3Doc.id.toString()],
       },
     }),
     await payload.update({
       collection: 'products',
-      id: product2Doc.id,
+      id: product2Doc.id.toString(),
       data: {
-        relatedProducts: [product1Doc.id, product3Doc.id],
+        relatedProducts: [product1Doc.id.toString(), product3Doc.id.toString()],
       },
     }),
     await payload.update({
       collection: 'products',
-      id: product3Doc.id,
+      id: product3Doc.id.toString(),
       data: {
-        relatedProducts: [product1Doc.id, product2Doc.id],
+        relatedProducts: [product1Doc.id.toString(), product2Doc.id.toString()],
       },
-    }),
+    }
+  ),
   ])
 
   payload.logger.info(`— Seeding products page...`)
@@ -184,9 +185,9 @@ export const seed = async (payload: Payload): Promise<void> => {
     collection: 'pages',
     data: JSON.parse(
       JSON.stringify(home)
-        .replace(/"\{\{PRODUCT1_IMAGE\}\}"/g, image1ID)
-        .replace(/"\{\{PRODUCT2_IMAGE\}\}"/g, image2ID)
-        .replace(/"\{\{PRODUCTS_PAGE_ID\}\}"/g, productsPageID),
+        .replace(/"\{\{PRODUCT1_IMAGE\}\}"/g, image1ID.toString())
+        .replace(/"\{\{PRODUCT2_IMAGE\}\}"/g, image2ID.toString())
+        .replace(/"\{\{PRODUCTS_PAGE_ID\}\}"/g, productsPageID.toString()),
     ),
   })
 
@@ -195,7 +196,7 @@ export const seed = async (payload: Payload): Promise<void> => {
   await payload.create({
     collection: 'pages',
     data: JSON.parse(
-      JSON.stringify(cartPage).replace(/"\{\{PRODUCTS_PAGE_ID\}\}"/g, productsPageID),
+      JSON.stringify(cartPage).replace(/"\{\{PRODUCTS_PAGE_ID\}\}"/g, productsPageID.toString()),
     ),
   })
 
@@ -204,7 +205,7 @@ export const seed = async (payload: Payload): Promise<void> => {
   await payload.updateGlobal({
     slug: 'settings',
     data: {
-      productsPage: productsPageDoc.id,
+      productsPage: productsPageDoc.id.toString(),
     },
   })
 
@@ -219,7 +220,7 @@ export const seed = async (payload: Payload): Promise<void> => {
             type: 'reference',
             reference: {
               relationTo: 'pages',
-              value: productsPageDoc.id,
+              value: productsPageDoc.id.toString(),
             },
             label: 'Shop',
           },
