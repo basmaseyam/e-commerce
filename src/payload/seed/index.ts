@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { Payload } from 'payload'
+import type { Payload } from 'payload'
 
 import { cartPage } from './cart-page'
 import { home } from './home'
